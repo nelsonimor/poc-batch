@@ -13,6 +13,7 @@ import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 
+import com.example.client.util.ObjectMapper;
 import com.exemple.poc.client.dto.response.CityDTO;
 
 import bball.dao.DAO;
@@ -36,27 +37,11 @@ public class CityItemReader implements ItemReader<CityDTO>  {
     	
     	HashMap<Integer, Country> countries = new HashMap<Integer, Country>();
     	Vector<Country> cs = dao.getCountries();
-    	for (Iterator iterator = cs.iterator(); iterator.hasNext();) {
-			Country country = (Country) iterator.next();
-			countries.put(country.getId(), country);
-		}
-    	
-    	
-    	Vector<City> css = dao.getCities();
-    	for (Iterator iterator = css.iterator(); iterator.hasNext();) {
-			City city = (City) iterator.next();
-			CityDTO c = new CityDTO();
-			c.setName(city.getName());
-			c.setLatitude(city.getLatitude());
-			c.setLongitude(city.getLongitude());
-			c.setCounty(city.getCounty());
-			c.setState(city.getState());
-			c.setZip(city.getZip());
-			c.setCountycode(city.getCountyCode());
-			c.setCountryName(countries.get(city.getCountry()).getName());
-			cities.add(c);
-		}
+    	cs.stream().forEach(country -> countries.put(country.getId(), country));
 
+    	Vector<City> css = dao.getCities();
+    	css.stream().forEach(city -> cities.add(ObjectMapper.toCityDto(city,countries.get(city.getCountry()))));
+    	
     	dao.deconnect();
 		logger.debug("CityItemReader size cities {} ",cities.size());
 	}

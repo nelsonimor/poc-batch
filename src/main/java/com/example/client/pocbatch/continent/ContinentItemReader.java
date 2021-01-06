@@ -1,7 +1,6 @@
 package com.example.client.pocbatch.continent;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -12,7 +11,7 @@ import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 
-import com.example.client.pocbatch.city.CityItemReader;
+import com.example.client.util.ObjectMapper;
 import com.exemple.poc.client.dto.response.ContinentDTO;
 
 import bball.dao.DAO;
@@ -27,22 +26,11 @@ public class ContinentItemReader implements ItemReader<ContinentDTO>  {
 	Logger logger = LoggerFactory.getLogger(ContinentItemReader.class);
 	
 	public void init() {
-		
-		
     	DAO dao = new DAOImpl();
     	dao.connect();
     	Vector<Continent> cs = dao.getContinents();
     	logger.debug("Find {} continents",cs.size());
-   
-    	for (Iterator iterator = cs.iterator(); iterator.hasNext();) {
-			Continent continent = (Continent) iterator.next();
-			ContinentDTO c = new ContinentDTO();
-			c.setName(continent.getName());
-			c.setCode(continent.getCode());
-			continents.add(c);
-		}
-    	
-    
+    	cs.stream().forEach(c -> continents.add(ObjectMapper.toContinentDto(c)));
     	dao.deconnect();
 		logger.debug("ContinentItemReader size continent {} ",continents.size());
 	}

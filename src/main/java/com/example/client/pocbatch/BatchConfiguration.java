@@ -44,8 +44,8 @@ public class BatchConfiguration {
                 .incrementer(new RunIdIncrementer())
                 .listener(listener())
                 .flow(continentStep())
-                //.next(countryStep())
-                //.next(cityStep())
+                .next(countryStep())
+                .next(cityStep())
                 //.next(personStep())
                 .end()
                 .build();
@@ -80,7 +80,7 @@ public class BatchConfiguration {
     	CountryItemReader reader = new CountryItemReader();
     	reader.init();
     	
-        return stepBuilderFactory.get("countryStep").<CountryDTO, CountryDTO> chunk(1)
+        return stepBuilderFactory.get("countryStep").<CountryDTO, CountryDTO> chunk(10)
         		.reader(reader)
                 //.processor(processor())
                 .writer(countryWriter())

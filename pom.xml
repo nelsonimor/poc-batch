@@ -106,6 +106,24 @@
 				</configuration>
 			</plugin>
 		</plugins>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>1.0-beta-7</version>
+			</extension>
+		</extensions>
+
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>myserver3</id>
+			<name>Name of the Maven repository</name>
+			<url>dav:http://webdav-cameliakuzma.alwaysdata.net</url>
+			<uniqueVersion>false</uniqueVersion>
+		</repository>
+	</distributionManagement>
 
 </project>

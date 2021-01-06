@@ -22,8 +22,12 @@ public class CountryItemWriter implements ItemWriter<CountryDTO> {
 
 	@Override
 	public void write(List<? extends CountryDTO> countries) throws Exception { 
+		
+		logger.debug("CountryItemWriter.write() ...");
+		
 		for (CountryDTO pa : countries) {
 			try {
+				System.out.println("CountryItemWriter.write() new country => "+pa.getName());
 				RestTemplate restTemplate = new RestTemplate();
 				ResponseEntity<CountryDTO> respEntity = restTemplate.postForEntity(allConfig.getEndPointCountry(), pa, CountryDTO.class);
 				CountryDTO resp = respEntity.getBody();
